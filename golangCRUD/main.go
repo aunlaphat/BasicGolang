@@ -73,6 +73,7 @@ func main() {
 
 	book = append(book, Book{ID: 1, Title: "Harry Potter", Author: "J.K.Rolling"})
 	book = append(book, Book{ID: 2, Title: "The Conjuring", Author: "P.James"})
+	book = append(book, Book{ID: 3, Title: "Terrifier", Author: "P.James"})
 
 	app.Use(checkMiddleWare)
 
