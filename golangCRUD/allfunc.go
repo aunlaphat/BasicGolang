@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -110,13 +112,38 @@ func testHtml(c *fiber.Ctx) error {
 // stamp value on dev use command >"set SECRET=1234" check value >"set"
 // stamp value again >"set SECRET=1234" go on postman
 func getEnv(c *fiber.Ctx) error {
-	if value, exists := os.LookupEnv("SECRET"); exists {
-		return c.JSON(fiber.Map{
-			"SECRET": value,
-		})
+	// if value, exists := os.LookupEnv("SECRET"); exists {
+	// 	return c.JSON(fiber.Map{
+	// 		"SECRET": value,
+	// 	})
+	// }
+
+	// return c.JSON(fiber.Map{
+	// 	"SECRET": "defaultsecret",
+	// })
+
+	secret := os.Getenv("SECRET")
+
+	if secret == "" {
+		secret = "defaultsecret"
 	}
 
 	return c.JSON(fiber.Map{
-		"SECRET": "defaultsecret",
+		"SECRET": secret,
 	})
+
+	// return c.JSON(fiber.Map{
+	// 	"SECRET": os.Getenv("SECRET"),
+	// })
+}
+
+func checkMiddleWare(c *fiber.Ctx) error {
+	start := time.Now()
+
+	fmt.Printf(
+		"URL = %s, Method = %s, Time = %s\n",
+		c.OriginalURL(), c.Method(), start,
+	)
+
+	return c.Next()
 }

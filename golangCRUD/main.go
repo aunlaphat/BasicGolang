@@ -4,8 +4,11 @@ import (
 	// "fmt"
 	// "log"
 	// "net/http"
+	"log"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/template/html/v2"
+	"github.com/joho/godotenv"
 )
 
 type Book struct {
@@ -45,8 +48,22 @@ var book []Book
 
 // }
 
+// @title Book API
+// @Description Handles user login requests and generates a token for the authenticated user.
+// @version 1.0
+// @host localhost:8080
+// @BasePath /
+// @schemes http
+// @Accept json
+// @Produce json
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("load .env error")
+	}
 	engine := html.New("./views", ".html")
 	app := fiber.New(fiber.Config{
 		Views: engine,
@@ -56,6 +73,8 @@ func main() {
 
 	book = append(book, Book{ID: 1, Title: "Harry Potter", Author: "J.K.Rolling"})
 	book = append(book, Book{ID: 2, Title: "The Conjuring", Author: "P.James"})
+
+	app.Use(checkMiddleWare)
 
 	app.Get("/book", getBook)
 
